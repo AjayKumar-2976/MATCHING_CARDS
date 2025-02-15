@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Results</title>
+  <link rel="stylesheet" href="results.css">
+  
+</head>
+<body>
+    <div class="results-container">
+        <h1>Game Results</h1>
+        <p id="finalScore">Score: </p>
+        <p id="timeCompleted">Time Left: </p>
+        <a href="index.html" class="btn">Play Again</a>
+    </div>
+    <script>
+        // Fetch score and time from localStorage
+        const finalScore = localStorage.getItem('finalScore');
+        const timeLeft = localStorage.getItem('timeLeft');
+
+        // Update the results page
+        document.getElementById('finalScore').textContent = `Score: ${finalScore}`;
+        document.getElementById('timeCompleted').textContent = `Time Left: ${timeLeft}s`;
+
+
+      
+    </script>
+</body>
+</html>
