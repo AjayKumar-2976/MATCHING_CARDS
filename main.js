@@ -8,20 +8,15 @@ let lockBoard = false;
 let timer = document.getElementById("timer");
 let restart = document.getElementById("restartButton");
 let timeEnding = new Audio("./timer-digital-countdown-bop-audio-1-00-04.mp3");
-let flipSound = new Audio('./flipsound.mp3');
-let gameOverSound = new Audio('./mixkit-musical-game-over-959.wav');
 let interval;
 let timeLeft = 120; // 2 minutes in seconds
 
 // Score
 let score = 0;
 
-// Preload sounds to prevent delay
-function preloadSounds() {
-    timeEnding.load();
-    flipSound.load();
-    gameOverSound.load();
-}
+// Preload sounds
+const flipSound = new Audio('./flipsound.mp3');
+const gameOverSound = new Audio('./mixkit-musical-game-over-959.wav');
 
 // Start the timer
 function startTimer() {
@@ -48,7 +43,7 @@ function startTimer() {
 
 // Flip card logic
 function flipCard(card) {
-    if (lockBoard || card === firstCard) return;
+    if (lockBoard || card === firstCard || card.classList.contains('flip')) return;
 
     card.classList.add("flip");
     flipSound.play();
@@ -107,17 +102,16 @@ function resetBoard() {
 function checkGameOver() {
     if (matchedCards === cards.length / 2) {
         clearInterval(interval);
-        gameOverSound.play().then(() => {
-            alert("Congratulations! You've matched all the cards.");
+        gameOverSound.play();
+        alert("Congratulations! You've matched all the cards.");
 
-            // Save score and time to localStorage
-            const finalScore = score * 5;
-            localStorage.setItem('finalScore', finalScore);
-            localStorage.setItem('timeLeft', timeLeft);
+        // Save score and time to localStorage
+        const finalScore = score * 5;
+        localStorage.setItem('finalScore', finalScore);
+        localStorage.setItem('timeLeft', timeLeft);
 
-            // Redirect to results page
-            window.location.href = 'results.html';
-        });
+        // Redirect to results page
+        window.location.href = 'results.html';
     }
 }
 
@@ -161,6 +155,5 @@ document.getElementById("resetButton").addEventListener('click', resetGame);
 document.getElementById("restartButton").addEventListener('click', restartGame);
 
 // Initialize game
-preloadSounds();
 shuffleCards();
 startTimer();
