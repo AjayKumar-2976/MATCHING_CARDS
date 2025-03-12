@@ -1,3 +1,9 @@
+// Preload sounds
+const flipSound = new Audio('./flipsound.mp3');
+const matchSound = new Audio('./match-sound.mp3');
+const gameOverSound = new Audio('./mixkit-musical-game-over-959.wav');
+const timeEnding = new Audio("./timer-digital-countdown-bop-audio-1-00-04.mp3");
+
 let cards = document.querySelectorAll(".cards");
 let hasFlippedCard = false;
 let firstCard, secondCard;
@@ -7,7 +13,6 @@ let lockBoard = false;
 // Timer variables
 let timer = document.getElementById("timer");
 let restart = document.getElementById("restartButton");
-let timeEnding = new Audio("./timer-digital-countdown-bop-audio-1-00-04.mp3");
 let interval;
 let timeLeft = 120; // 2 minutes in seconds
 
@@ -42,8 +47,8 @@ function flipCard(card) {
     if (lockBoard || card === firstCard) return;
 
     card.classList.add("flip");
-    const music = new Audio('./flipsound.mp3');
-    music.play();
+    flipSound.currentTime = 0; // Reset flip sound
+    flipSound.play();
 
     if (!hasFlippedCard) {
         // First card
@@ -57,12 +62,14 @@ function flipCard(card) {
     }
 }
 
-// Check if cards match
+// Check if the cards match
 function checkForMatch() {
     if (firstCard.dataset.name === secondCard.dataset.name) {
         // Match found
         score++;
         document.getElementById("score").textContent = `Score: ${score * 5}`;
+        matchSound.currentTime = 0; // Reset match sound
+        matchSound.play();
         disableCards();
         matchedCards++;
         checkGameOver();
@@ -99,17 +106,16 @@ function resetBoard() {
 function checkGameOver() {
     if (matchedCards === cards.length / 2) {
         clearInterval(interval);
-        const gameOverSound = new Audio('./mixkit-musical-game-over-959.wav');
-        gameOverSound.play();
-        alert("Congratulations! You've matched all the cards.");
-
-        // Save score and time to localStorage
-        const finalScore = score * 5;
-        localStorage.setItem('finalScore', finalScore);
-        localStorage.setItem('timeLeft', timeLeft);
-
-        // Redirect to results page
-        window.location.href = 'results.html';
+        gameOverSound.currentTime = 0; // Reset game over sound
+        gameOverSound.play().then(() => {
+            alert("Congratulations! You've matched all the cards.");
+            // Save score and time to localStorage
+            const finalScore = score * 5;
+            localStorage.setItem('finalScore', finalScore);
+            localStorage.setItem('timeLeft', timeLeft);
+            // Redirect to results page
+            window.location.href = 'results.html';
+        }).catch(error => console.log("Audio play error:", error));
     }
 }
 
